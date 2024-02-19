@@ -80,7 +80,7 @@ jobs:
     - name: Run tests
       run: pytest tests/test_api.py
       env:
-        API_URL: localhost:82
+        API_URL: http://localhost:82
 
     - name: Build Docker images
       run: |
