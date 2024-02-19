@@ -43,7 +43,7 @@ jobs:
         API_TOKEN: ${{ secrets.API_TOKEN }}
         SECRET: ${{ secrets.SECRET }}
 
-    - name: Sleep
+    - name: Sleep (for postgres servers)
       run: sleep 5s
       shell: bash
 
@@ -69,17 +69,6 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.12'
-    
-    - name: Setting variables
-      env:
-        API_TOKEN: ${{ secrets.API_TOKEN }}
-        SECRET: ${{ secrets.SECRET }}
-        API_URL: localhost:82
-        FIELDS_URL: localhost:82/fields/
-        PROGRAMS_URL: localhost:82/programs/fields
-        AUTH_URL: localhost:82/auth/session/check
-        POSTGRES_CONNECTION_STRING: postgresql+psycopg2://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@localhost:5434/${{ secrets.POSTGRES_DB }}
-      run: echo "$API_TOKEN"
 
     - name: Install dependencies
       run: |
@@ -90,6 +79,8 @@ jobs:
         
     - name: Run tests
       run: pytest tests/test_api.py
+      env:
+        API_URL: localhost:82
 
     - name: Build Docker images
       run: |
