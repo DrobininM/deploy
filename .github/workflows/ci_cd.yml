@@ -12,9 +12,9 @@ jobs:
         image: postgres
 
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: bi_cur
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
 
         ports:
           - 5434:5432
@@ -30,10 +30,22 @@ jobs:
 
     - name: Execute auth sql script
       #run: psql -h postgres -d postgres_db -U postgres_user -c 'SELECT 1;'
-      run: psql -h 0.0.0.0 -p 5434 -U postgres -d bi_cur -f auth/db_init/init.sql
+      run: psql -h 0.0.0.0 -p 5434 -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -f auth/db_init/init.sql
       env:
-        PGPASSWORD: postgres
+        PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
       
+    - name: Execute fields sql script
+      #run: psql -h postgres -d postgres_db -U postgres_user -c 'SELECT 1;'
+      run: psql -h 0.0.0.0 -p 5434 -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -f fields/db_init/init.sql
+      env:
+        PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+
+    - name: Execute programs sql script
+      #run: psql -h postgres -d postgres_db -U postgres_user -c 'SELECT 1;'
+      run: psql -h 0.0.0.0 -p 5434 -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -f programs/db_init/init.sql
+      env:
+        PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+
     - name: Setup Python
       uses: actions/setup-python@v2
       with:
@@ -43,6 +55,11 @@ jobs:
       env:
         API_TOKEN: ${{ secrets.API_TOKEN }}
         SECRET: ${{ secrets.SECRET }}
+        API_URL: localhost:82
+        FIELDS_URL: localhost:82/fields/
+        PROGRAMS_URL: localhost:82/programs/fields
+        AUTH_URL: localhost:82/auth/session/check
+        POSTGRES_CONNECTION_STRING: postgresql+psycopg2://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@localhost:5434/${{ secrets.POSTGRES_DB }}
       run: echo "$API_TOKEN"
 
     - name: Install dependencies
@@ -50,7 +67,11 @@ jobs:
         pip install -r auth/app/requirements.txt
         pip install -r fields/app/requirements.txt
         pip install -r programs/app/requirements.txt
+        pip install -r tests/requirements.txt
         
+    - name: Run tests
+      run: pytest tests/test_api.py
+
     - name: Build Docker images
       run: |
         docker build -t auth ./auth/app
