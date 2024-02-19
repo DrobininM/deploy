@@ -43,6 +43,9 @@ jobs:
         API_TOKEN: ${{ secrets.API_TOKEN }}
         SECRET: ${{ secrets.SECRET }}
 
+    - name: temp
+      run: docker ps
+
     - name: Execute auth sql script
       #run: psql -h postgres -d postgres_db -U postgres_user -c 'SELECT 1;'
       run: psql -h 0.0.0.0 -p 5434 -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -f auth/db_init/init.sql
