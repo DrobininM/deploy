@@ -47,35 +47,35 @@ jobs:
       run: sleep 5s
       shell: bash
 
-    - name: Execute auth sql script
+    #- name: Execute auth sql script
       #run: psql -h postgres -d postgres_db -U postgres_user -c 'SELECT 1;'
-      run: psql -h 0.0.0.0 -p 5434 -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -f auth/db_init/init.sql
-      env:
-        PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      #run: psql -h 0.0.0.0 -p 5434 -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -f auth/db_init/init.sql
+      #env:
+        #PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
       
-    - name: Execute fields sql script
+    #- name: Execute fields sql script
       #run: psql -h postgres -d postgres_db -U postgres_user -c 'SELECT 1;'
-      run: psql -h 0.0.0.0 -p 5433 -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -f fields/db_init/init.sql
-      env:
-        PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      #run: psql -h 0.0.0.0 -p 5433 -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -f fields/db_init/init.sql
+      #env:
+        #PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
 
-    - name: Execute programs sql script
+    #- name: Execute programs sql script
       #run: psql -h postgres -d postgres_db -U postgres_user -c 'SELECT 1;'
-      run: psql -h 0.0.0.0 -p 5432 -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -f programs/db_init/init.sql
-      env:
-        PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      #run: psql -h 0.0.0.0 -p 5432 -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -f programs/db_init/init.sql
+      #env:
+        #PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
 
     - name: Setup Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.12'
 
-    - name: Install dependencies
-      run: |
-        pip install -r auth/app/requirements.txt
-        pip install -r fields/app/requirements.txt
-        pip install -r programs/app/requirements.txt
-        pip install -r tests/requirements.txt
+    #- name: Install dependencies
+      #run: |
+        #pip install -r auth/app/requirements.txt
+        #pip install -r fields/app/requirements.txt
+        #pip install -r programs/app/requirements.txt
+        #pip install -r tests/requirements.txt
         
     - name: Run tests
       run: pytest tests/test_api.py
