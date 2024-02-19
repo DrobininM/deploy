@@ -28,15 +28,15 @@ jobs:
     - name: Temp
       run: pwd
 
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
     # queries database with postgres client
     - name: Query database
       #run: psql -h postgres -d postgres_db -U postgres_user -c 'SELECT 1;'
       run: psql -h 0.0.0.0 -p 5434 -U postgres -d bi_cur -f auth/db_init/init.sql
       env:
         PGPASSWORD: postgres
-
-    - name: Checkout repository
-      uses: actions/checkout@v2
       
     - name: Setup Python
       uses: actions/setup-python@v2
