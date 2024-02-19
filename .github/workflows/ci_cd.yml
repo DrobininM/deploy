@@ -22,7 +22,7 @@ jobs:
     steps:
     - name: Install PostgreSQL client
       run: |
-        apt-get update
+        sudo apt-get update
         sudo apt-get install --yes postgresql-client
 
     # queries database with postgres client
