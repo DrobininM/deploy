@@ -25,14 +25,10 @@ jobs:
         sudo apt-get update
         sudo apt-get install --yes postgresql-client
 
-    - name: Temp
-      run: pwd
-
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    # queries database with postgres client
-    - name: Query database
+    - name: Execute auth sql script
       #run: psql -h postgres -d postgres_db -U postgres_user -c 'SELECT 1;'
       run: psql -h 0.0.0.0 -p 5434 -U postgres -d bi_cur -f auth/db_init/init.sql
       env:
@@ -42,7 +38,13 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.12'
-        
+    
+    - name: Setting variables
+      env:
+        API_TOKEN: ${{ secrets.API_TOKEN }}
+        SECRET: ${{ secrets.SECRET }}
+      run: echo "$API_TOKEN"
+
     - name: Install dependencies
       run: |
         pip install -r auth/app/requirements.txt
