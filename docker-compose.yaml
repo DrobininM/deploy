@@ -17,6 +17,8 @@ services:
   app_auth:
     build:
       context: auth/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     expose:
       - "5002"
     depends_on:
@@ -32,6 +34,8 @@ services:
   app_fields:
     build:
       context: fields/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     expose:
       - "5001"
     depends_on:
@@ -48,6 +52,8 @@ services:
   app_programs:
     build:
       context: programs/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     expose:
       - "5000"
     depends_on:
