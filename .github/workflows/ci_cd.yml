@@ -14,17 +14,17 @@ jobs:
     - name: Start containers
       run: docker-compose -f "docker-compose.yaml" up -d --build
       env:
-        POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-        POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-        POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-        POSTGRES_CONNECTION_STRING_AUTH: "postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@host.docker.internal:5434/${POSTGRES_DB}"
-        POSTGRES_CONNECTION_STRING_FIELDS: "postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@host.docker.internal:5433/${POSTGRES_DB}"
-        POSTGRES_CONNECTION_STRING_PROGRAMS: "postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@host.docker.internal:5432/${POSTGRES_DB}"
+        POSTGRES_USER: postgre #${{ secrets.POSTGRES_USER }}
+        POSTGRES_PASSWORD: postgre #${{ secrets.POSTGRES_PASSWORD }}
+        POSTGRES_DB: bi_cur #${{ secrets.POSTGRES_DB }}
+        POSTGRES_CONNECTION_STRING_AUTH: "postgresql+psycopg2://postgre:postgre@host.docker.internal:5434/bi_cur"
+        POSTGRES_CONNECTION_STRING_FIELDS: "postgresql+psycopg2://postgre:postgre@host.docker.internal:5433/bi_cur"
+        POSTGRES_CONNECTION_STRING_PROGRAMS: "postgresql+psycopg2://postgre:postgre@host.docker.internal:5432/bi_cur"
         FIELDS_URL: http://host.docker.internal:82/fields/
         PROGRAMS_URL: http://host.docker.internal:82/programs/fields
         AUTH_URL: http://host.docker.internal:82/auth/session/check
-        API_TOKEN: ${{ secrets.API_TOKEN }}
-        SECRET: ${{ secrets.SECRET }}
+        API_TOKEN: 31620f51972845091649802035b423d1 #${{ secrets.API_TOKEN }}
+        SECRET: 123456789 #${{ secrets.SECRET }}
 
     - name: Setup Python
       uses: actions/setup-python@v2
