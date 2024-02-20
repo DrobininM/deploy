@@ -7,24 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    #services:
-      #postgres:
-        #image: postgres
-
-        #env:
-          #POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          #POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          #POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-
-        #ports:
-          #- 5434:5432
-
     steps:
-    - name: Install PostgreSQL client
-      run: |
-        sudo apt-get update
-        sudo apt-get install --yes postgresql-client
-
     - name: Checkout repository
       uses: actions/checkout@v2
 
@@ -34,36 +17,14 @@ jobs:
         POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-        POSTGRES_CONNECTION_STRING_AUTH: "postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5434/${POSTGRES_DB}"
-        POSTGRES_CONNECTION_STRING_FIELDS: "postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5433/${POSTGRES_DB}"
-        POSTGRES_CONNECTION_STRING_PROGRAMS: "postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}"
-        FIELDS_URL: http://localhost:82/fields/
-        PROGRAMS_URL: http://localhost:82/programs/fields
-        AUTH_URL: http://localhost:82/auth/session/check
+        POSTGRES_CONNECTION_STRING_AUTH: "postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@host.docker.internal:5434/${POSTGRES_DB}"
+        POSTGRES_CONNECTION_STRING_FIELDS: "postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@host.docker.internal:5433/${POSTGRES_DB}"
+        POSTGRES_CONNECTION_STRING_PROGRAMS: "postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@host.docker.internal:5432/${POSTGRES_DB}"
+        FIELDS_URL: http://host.docker.internal:82/fields/
+        PROGRAMS_URL: http://host.docker.internal:82/programs/fields
+        AUTH_URL: http://host.docker.internal:82/auth/session/check
         API_TOKEN: ${{ secrets.API_TOKEN }}
         SECRET: ${{ secrets.SECRET }}
-
-    - name: Sleep (for postgres servers)
-      run: sleep 5s
-      shell: bash
-
-    #- name: Execute auth sql script
-      #run: psql -h postgres -d postgres_db -U postgres_user -c 'SELECT 1;'
-      #run: psql -h 0.0.0.0 -p 5434 -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -f auth/db_init/init.sql
-      #env:
-        #PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-      
-    #- name: Execute fields sql script
-      #run: psql -h postgres -d postgres_db -U postgres_user -c 'SELECT 1;'
-      #run: psql -h 0.0.0.0 -p 5433 -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -f fields/db_init/init.sql
-      #env:
-        #PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-
-    #- name: Execute programs sql script
-      #run: psql -h postgres -d postgres_db -U postgres_user -c 'SELECT 1;'
-      #run: psql -h 0.0.0.0 -p 5432 -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_DB }} -f programs/db_init/init.sql
-      #env:
-        #PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
 
     - name: Setup Python
       uses: actions/setup-python@v2
@@ -71,19 +32,9 @@ jobs:
         python-version: '3.12'
 
     - name: Install dependencies
-      run: |
-        pip install -r auth/app/requirements.txt
-        pip install -r fields/app/requirements.txt
-        pip install -r programs/app/requirements.txt
-        pip install -r tests/requirements.txt
+      run: pip install -r tests/requirements.txt
         
     - name: Run tests
       run: pytest tests/test_api.py
       env:
-        API_URL: http://localhost:82
-
-    - name: Build Docker images
-      run: |
-        docker build -t auth ./auth/app
-        docker build -t fields ./fields/app
-        docker build -t programs ./programs/app
+        API_URL: http://host.docker.internal:82
