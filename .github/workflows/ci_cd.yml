@@ -37,9 +37,9 @@ jobs:
         POSTGRES_CONNECTION_STRING_AUTH: "postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5434/${POSTGRES_DB}"
         POSTGRES_CONNECTION_STRING_FIELDS: "postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5433/${POSTGRES_DB}"
         POSTGRES_CONNECTION_STRING_PROGRAMS: "postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}"
-        FIELDS_URL: localhost:82/fields/
-        PROGRAMS_URL: localhost:82/programs/fields
-        AUTH_URL: localhost:82/auth/session/check
+        FIELDS_URL: http://localhost:82/fields/
+        PROGRAMS_URL: http://localhost:82/programs/fields
+        AUTH_URL: http://localhost:82/auth/session/check
         API_TOKEN: ${{ secrets.API_TOKEN }}
         SECRET: ${{ secrets.SECRET }}
 
