@@ -44,6 +44,7 @@ jobs:
 
     - name: Push Docker images
       run: |
+          docker images
           docker tag deploy-app_auth ${{ secrets.DOCKERHUB_REPOSITORY }}:deploy-app_auth
           docker tag deploy-app_fields ${{ secrets.DOCKERHUB_REPOSITORY }}:deploy-app_fields
           docker tag deploy-app_programs ${{ secrets.DOCKERHUB_REPOSITORY }}:deploy-app_programs
