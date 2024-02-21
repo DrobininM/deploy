@@ -1,7 +1,8 @@
 name: CI/CD
 
 on:
-  workflow_dispatch
+  push:
+    branches: [ "master" ]
 
 jobs:
   build:
@@ -44,7 +45,6 @@ jobs:
 
     - name: Push Docker images
       run: |
-          docker images
           docker tag deploy_app_auth ${{ secrets.DOCKERHUB_REPOSITORY }}:deploy_app_auth
           docker tag deploy_app_fields ${{ secrets.DOCKERHUB_REPOSITORY }}:deploy_app_fields
           docker tag deploy_app_programs ${{ secrets.DOCKERHUB_REPOSITORY }}:deploy_app_programs
