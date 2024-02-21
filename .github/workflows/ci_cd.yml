@@ -31,10 +31,19 @@ jobs:
       with:
         python-version: '3.12'
 
-    - name: Install dependencies
+    - name: Install test dependencies
       run: pip install -r tests/requirements.txt
         
     - name: Run tests
       run: pytest tests/test_api.py
       env:
         API_URL: http://localhost:82
+      
+    - name: Docker Hub Sign In
+      run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+
+    - name: Push Docker images
+      run: |
+          docker push app_auth
+          docker push app_fields
+          docker push app_programs
